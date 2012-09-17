@@ -45,7 +45,14 @@ TEST(Integral, Test)
 
 TEST(Integral, Mask)
 {
-	ASSERT_EQ(0xff, mask(0x00ff00, 8, 16));
+	ASSERT_EQ(0x0,      mask(0x00ff00, 0xff00ff));
+	ASSERT_EQ(0x0f0f0f, mask(0xffffff, 0x0f0f0f));
+}
+
+TEST(Integral, Crop)
+{
+	ASSERT_EQ(0xff,   crop(0x00ff00, 8, 16));
+	ASSERT_EQ(0x8001, crop(0x080010, 4, 23));
 }
 
 TEST(Integral, Flip)

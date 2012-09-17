@@ -78,6 +78,23 @@ bool test(bitset<N> const& t, size_t pos)
 
 // mask
 template<size_t N>
+bitset<N> mask(bitset<N> t, bitset<N> mask)
+{
+	return t & mask;
+}
+
+
+// crop
+template<size_t N>
+bitset<N> crop(bitset<N> t, size_t begin, size_t end)
+{
+	bitset<N> m ((1 << (end+1)) - (1 << (begin)));
+	return mask(t, m) >> begin;
+}
+
+
+// mask
+template<size_t N>
 bitset<N> mask(bitset<N> t, size_t begin, size_t end)
 {
 	bitset<N> r (0);

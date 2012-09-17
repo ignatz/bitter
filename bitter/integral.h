@@ -106,12 +106,19 @@ bool test(T t, size_t pos) noexcept
 // mask
 template<typename T, typename =
 	typename std::enable_if<std::is_integral<T>::value>::type>
-T mask(T t, size_t begin, size_t end) noexcept
+T mask(T t, T mask) noexcept
 {
-	T r (0);
-	for (size_t ii = begin; ii<end; ++ii)
-		test(t, ii) ? _set(r, ii-begin) : _reset(r, ii-begin);
-	return r;
+	return t & mask;
+}
+
+
+// crop
+template<typename T, typename =
+	typename std::enable_if<std::is_integral<T>::value>::type>
+T crop(T t, size_t begin, size_t end) noexcept
+{
+	T m = (1 << (end+1)) - (1 << (begin));
+	return mask(t, m) >> begin;
 }
 
 

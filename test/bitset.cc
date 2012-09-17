@@ -47,8 +47,16 @@ TEST(Bitset, Test)
 
 TEST(Bitset, Mask)
 {
-	ASSERT_EQ(bt42(0xff), mask(bt42(0x00ff00), 8, 16));
+	ASSERT_EQ(bt42(0x0),      mask(bt42(0x00ff00), bt42(0xff00ff)));
+	ASSERT_EQ(bt42(0x0f0f0f), mask(bt42(0xffffff), bt42(0x0f0f0f)));
 }
+
+TEST(Bitset, Crop)
+{
+	ASSERT_EQ(bt42(0xff),   crop(bt42(0x00ff00), 8, 16));
+	ASSERT_EQ(bt42(0x8001), crop(bt42(0x080010), 4, 23));
+}
+
 
 TEST(Bitset, Flip)
 {
