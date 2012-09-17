@@ -15,6 +15,7 @@ size_t size(bitset<N> t)
 	return t.size();
 }
 
+
 // flip
 template<size_t N>
 bitset<N> flip(bitset<N> t, size_t pos)
@@ -80,10 +81,10 @@ bool test(bitset<N> const& t, size_t pos)
 template<size_t N>
 bitset<N> mask(bitset<N> t, size_t begin, size_t end)
 {
-	bitset<N> ret = 0;
+	bitset<N> r (0);
 	for (size_t ii = begin; ii<end; ++ii)
-		test(t, ii-begin) ? t.set(ret, ii-begin) : t.reset(ret, ii-begin);
-	return ret;
+		test(t, ii) ? r.set(ii-begin) : r.reset(ii-begin);
+	return r;
 }
 
 

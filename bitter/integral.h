@@ -108,10 +108,10 @@ template<typename T, typename =
 	typename std::enable_if<std::is_integral<T>::value>::type>
 T mask(T t, size_t begin, size_t end)
 {
-	T ret = 0;
+	T r (0);
 	for (size_t ii = begin; ii<end; ++ii)
-		test(t, ii-begin) ? _set(ret, ii-begin) : _reset(ret, ii-begin);
-	return ret;
+		test(t, ii) ? _set(r, ii-begin) : _reset(r, ii-begin);
+	return r;
 }
 
 
@@ -119,7 +119,7 @@ template<typename T, typename =
 	typename std::enable_if<std::is_integral<T>::value>::type>
 size_t count(T t)
 {
-	size_t cnt = 0;
+	size_t cnt (0);
 	for(size_t ii=0; ii<size(t); ++ii)
 		cnt += test(t, ii);
 	return cnt;

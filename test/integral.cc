@@ -43,6 +43,11 @@ TEST(Integral, Test)
 	ASSERT_FALSE(test(7, 4));
 }
 
+TEST(Integral, Mask)
+{
+	ASSERT_EQ(0xff, mask(0x00ff00, 8, 16));
+}
+
 TEST(Integral, Flip)
 {
 	unsigned char x;

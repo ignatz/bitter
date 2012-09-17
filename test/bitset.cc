@@ -45,6 +45,11 @@ TEST(Bitset, Test)
 	ASSERT_FALSE(test(bt42(7), 4));
 }
 
+TEST(Bitset, Mask)
+{
+	ASSERT_EQ(bt42(0xff), mask(bt42(0x00ff00), 8, 16));
+}
+
 TEST(Bitset, Flip)
 {
 	bt42 x;
