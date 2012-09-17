@@ -89,7 +89,7 @@ bitset<N> mask(bitset<N> t, size_t begin, size_t end)
 
 // count
 template<size_t N>
-bool count(bitset<N> const& t)
+size_t count(bitset<N> const& t)
 {
 	return t.count();
 }

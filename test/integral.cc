@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
-#include <iostream>
 
-#include "bitter/bitter.h"
+#include "bitter/integral.h"
 
 using namespace bit;
 

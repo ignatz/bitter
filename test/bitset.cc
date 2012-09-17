@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
-#include <iostream>
 
-#include "bitter/bitter.h"
+#include "bitter/bitset.h"
 
 using namespace bit;
 
@@ -64,7 +63,7 @@ TEST(Bitset, Flip)
 
 TEST(Bitset, Count)
 {
-	ASSERT_EQ(bt42(4), count(0x1111));
+	ASSERT_EQ(4, count(bt42(0x1111)));
 }
 
 TEST(Bitset, All)
