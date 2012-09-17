@@ -30,6 +30,7 @@ bitset<N> flip(bitset<N> t)
 }
 
 
+// set
 template<size_t N>
 bitset<N> set(bitset<N> t, size_t pos)
 {
@@ -51,7 +52,6 @@ bitset<N> set(bitset<N> t, size_t pos, bool value)
 }
 
 
-
 // reset
 template<size_t N>
 bitset<N> reset(bitset<N> t, size_t pos)
@@ -66,7 +66,6 @@ bitset<N> reset(bitset<N> t, size_t pos0, Pos ... pos)
 	t.reset(pos0);
 	return reset(t, pos...);
 }
-
 
 
 // test
