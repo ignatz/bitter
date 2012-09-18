@@ -199,6 +199,29 @@ parity(T t) noexcept
 	return count(t) & 1;
 }
 
+#ifdef __GNUC__
+inline
+bool
+parity(unsigned int t)
+{
+	return __builtin_parity(t);
+}
+
+inline
+bool
+parity(unsigned long t)
+{
+	return __builtin_parityl(t);
+}
+
+inline
+bool
+parity(unsigned long long t)
+{
+	return __builtin_parityll(t);
+}
+#endif // __GCC__
+
 template<typename T>
 inline
 typename std::enable_if<std::is_unsigned<T>::value, bool>::type
