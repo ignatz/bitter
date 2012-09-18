@@ -81,12 +81,15 @@ TEST(Integral, Parity)
 	ASSERT_TRUE( parity(0x0000001));
 	ASSERT_TRUE( parity(0x1111111));
 	ASSERT_FALSE(parity(0x0000000));
+
 	ASSERT_FALSE(parity((uint64_t)0x0101000001010101));
 	ASSERT_FALSE(parity((uint64_t)0x0101000001010101));
-	ASSERT_TRUE(parity((uint64_t)0x1000000000000000));
-	ASSERT_TRUE(parity((uint64_t)0x0100000000000000));
-	ASSERT_TRUE(parity((uint64_t)0x0800000000000000));
-	ASSERT_TRUE(parity((uint64_t)0x8000000000000000));
+
+	for (size_t ii = 0; ii<64; ++ii)
+		ASSERT_TRUE(parity(set((uint64_t)0x0, ii)));
+
+	for (size_t ii = 0; ii<64-1; ++ii)
+		ASSERT_FALSE(parity(set(set((uint64_t)0x0, ii), ii+1)));
 }
 
 TEST(Integral, All)
