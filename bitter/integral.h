@@ -1,6 +1,6 @@
 #pragma once
 
-// Copyright (c) 2011, Sebastian Jeltsch (sjeltsch@kip.uni-heidelberg.de)
+// Copyright (c) 2012, Sebastian Jeltsch (sjeltsch@kip.uni-heidelberg.de)
 // Distributed under the terms of the GPLv2 or newer
 
 #include <type_traits>
@@ -23,17 +23,14 @@ template<typename T, typename =
 	typename std::enable_if<std::is_integral<T>::value>::type>
 T flip(T t, size_t pos) noexcept
 {
-	return t ^ (1 << pos);
+	return t ^ (1<<pos);
 }
 
 template<typename T, typename =
 	typename std::enable_if<std::is_integral<T>::value>::type>
 T flip(T t) noexcept
 {
-	for(size_t ii=0; ii<size(t); ++ii)
-		t = flip(t, ii);
-
-	return t;
+	return ~t;
 }
 
 
@@ -41,9 +38,9 @@ T flip(T t) noexcept
 // set
 template<typename T, typename =
 	typename std::enable_if<std::is_integral<T>::value>::type>
-void _set(T& t, size_t pos) noexcept
+inline void _set(T& t, size_t pos) noexcept
 {
-	t |= (1 << pos);
+	t |= (1<<pos);
 }
 
 template<typename T, typename =
@@ -66,7 +63,7 @@ template<typename T, typename =
 	typename std::enable_if<std::is_integral<T>::value>::type>
 T set(T t, size_t pos, bool value) noexcept
 {
-	return value ? set(t, pos) : t & flip(1 << pos);
+	return (t & ~(1<<pos)) | (-value & (1<<pos));
 }
 
 
@@ -74,7 +71,7 @@ T set(T t, size_t pos, bool value) noexcept
 // reset
 template<typename T, typename =
 	typename std::enable_if<std::is_integral<T>::value>::type>
-void _reset(T& t, size_t pos) noexcept
+inline void _reset(T& t, size_t pos) noexcept
 {
 	t &= flip(t, pos);
 }
@@ -102,7 +99,7 @@ template<typename T, typename =
 	typename std::enable_if<std::is_integral<T>::value>::type>
 bool test(T t, size_t pos) noexcept
 {
-	return t & (1 << pos);
+	return t & (1<<pos);
 }
 
 
@@ -120,19 +117,21 @@ template<typename T, typename =
 	typename std::enable_if<std::is_integral<T>::value>::type>
 T crop(T t, size_t begin, size_t end) noexcept
 {
-	T m = (1 << (end+1)) - (1 << (begin));
+	T m = (1<<(end+1)) - (1<<begin);
 	return mask(t, m) >> begin;
 }
 
 
+// count
 template<typename T, typename =
 	typename std::enable_if<std::is_integral<T>::value>::type>
 size_t count(T t) noexcept
 {
-	size_t cnt (0);
-	for(size_t ii=0; ii<size(t); ++ii)
-		cnt += test(t, ii);
-	return cnt;
+	// Brian Kernighan's way
+	size_t c {0};
+	for (; t; c++)
+		t &= t - 1;
+	return c;
 }
 
 
@@ -141,10 +140,7 @@ template<typename T, typename =
 	typename std::enable_if<std::is_integral<T>::value>::type>
 bool all(T t) noexcept
 {
-	for(size_t ii=0; ii<size(t); ++ii)
-		if (!test(t, ii))
-			return false;
-	return true;
+	return !static_cast<T>(~t);
 }
 
 
@@ -162,7 +158,7 @@ template<typename T, typename =
 	typename std::enable_if<std::is_integral<T>::value>::type>
 bool none(T t) noexcept
 {
-	return t == 0x0;
+	return !t;
 }
 
 } // namespace bit
