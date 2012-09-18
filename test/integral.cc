@@ -72,6 +72,17 @@ TEST(Integral, Flip)
 TEST(Integral, Count)
 {
 	ASSERT_EQ(4, count(0x1111));
+	ASSERT_EQ(4, count((size_t)0x1111));
+	ASSERT_EQ(4, count((unsigned int)0x1111));
+}
+
+TEST(Integral, Parity)
+{
+	ASSERT_TRUE( parity(0x0000001));
+	ASSERT_TRUE( parity(0x1111111));
+	ASSERT_FALSE(parity(0x0000000));
+	ASSERT_FALSE(parity((uint64_t)0x0101000001010101));
+	ASSERT_FALSE(parity((uint64_t)0x0101000001010101));
 }
 
 TEST(Integral, All)

@@ -79,6 +79,14 @@ TEST(Bitset, Count)
 	ASSERT_EQ(4, count(bt42(0x1111)));
 }
 
+TEST(Bitset, Parity)
+{
+	ASSERT_TRUE( parity(bt42(0x0000001)));
+	ASSERT_TRUE( parity(bt42(0x1111111)));
+	ASSERT_FALSE(parity(bt42(0x0000000)));
+	ASSERT_FALSE(parity(bt42(0x1010101)));
+}
+
 TEST(Bitset, All)
 {
 	ASSERT_TRUE(all(bt8(0xff)));
