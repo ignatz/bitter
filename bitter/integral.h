@@ -205,7 +205,7 @@ typename std::enable_if<std::is_unsigned<T>::value, bool>::type
 parity(T t) noexcept
 {
 	size_t d = sizeof(T)*4;
-	for (; d>4; d >>= 1)
+	for (; d>2; d >>= 1)
 		t ^= t >>  d;
 	return (0x6996>>(t & 0xf)) & 1;
 }
