@@ -222,17 +222,36 @@ parity(unsigned long long t)
 }
 #endif // __GCC__
 
+template<typename T, size_t n>
+inline
+typename std::enable_if<(sizeof(T) * 8 > n), void>::type
+_parity_shift(T & t)
+{
+	    t ^= t >> n;
+}
+
+template<typename T, size_t n>
+inline
+typename std::enable_if<(sizeof(T) * 8 <= n), void>::type
+_parity_shift(T & )
+{
+}
+
 template<typename T>
 inline
 typename std::enable_if<std::is_unsigned<T>::value, bool>::type
 parity(T t) noexcept
 {
-	size_t d = sizeof(T)*4;
-	for (; d>2; d >>= 1)
-		t ^= t >>  d;
+	static_assert(sizeof(T) <= 16, "unsigned integral type too long");
+
+	_parity_shift<T, 64u>(t);
+	_parity_shift<T, 32u>(t);
+	_parity_shift<T, 16u>(t);
+	_parity_shift<T, 8u>(t);
+	_parity_shift<T, 4u>(t);
+
 	return (0x6996>>(t & 0xf)) & 1;
 }
-
 
 // all
 template<typename T>
