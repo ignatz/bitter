@@ -204,11 +204,10 @@ inline
 typename std::enable_if<std::is_unsigned<T>::value, bool>::type
 parity(T t) noexcept
 {
-	for (size_t d {sizeof(T)*4}; d>4; d>>= 1)
+	size_t d = sizeof(T)*4;
+	for (; d>4; d >>= 1)
 		t ^= t >>  d;
-
-	t &= 0xf;
-	return (0x6996 >> t) & 1;
+	return (0x6996>>(t & 0xf)) & 1;
 }
 
 
