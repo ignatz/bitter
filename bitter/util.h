@@ -19,7 +19,7 @@ template<typename T = unsigned long, size_t N>
 inline
 T convert(bitset<N> const& t)
 {
-	return T(t.to_ulong());
+	return T(t.to_ullong());
 }
 
 template<typename T, size_t N = sizeof(T)*8>
@@ -45,7 +45,7 @@ inline
 std::string
 str(bitset<N> const& t)
 {
-	return bitset<Len>(t.to_ulong()).to_string();
+	return bitset<Len>(t.to_ullong()).to_string();
 }
 
 template<typename T>

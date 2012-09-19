@@ -98,12 +98,11 @@ bitset<N> mask(bitset<N> const& t, bitset<N> const& mask)
 
 
 // crop
-template<size_t N>
+template<size_t Len, size_t N>
 inline
-bitset<N> crop(bitset<N> const& t, size_t begin, size_t end)
+bitset<Len> crop(bitset<N> const& t, size_t offset = 0)
 {
-	bitset<N> m ((1<<(end+1)) - (1<<begin));
-	return mask(t, m) >> begin;
+	return bitset<Len>(t.to_ullong() >> offset);
 }
 
 

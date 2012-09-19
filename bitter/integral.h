@@ -7,7 +7,6 @@
 
 #define BITTER_IF_INTEGRAL(T, RET) \
 	typename std::enable_if<(std::is_integral<T>::value), RET>::type
-
 namespace bit {
 
 using std::size_t;
@@ -125,13 +124,12 @@ mask(T t, T mask) noexcept
 
 
 // crop
-template<typename T>
+template<size_t Len, typename T>
 inline
 BITTER_IF_INTEGRAL(T, T)
-crop(T t, size_t begin, size_t end) noexcept
+crop(T t, size_t offset = 0) noexcept
 {
-	T m = (1<<(end+1)) - (1<<begin);
-	return mask(t, m) >> begin;
+	return (t >> offset) & ~(~0 << Len);
 }
 
 

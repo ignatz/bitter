@@ -53,8 +53,9 @@ TEST(Bitset, Mask)
 
 TEST(Bitset, Crop)
 {
-	ASSERT_EQ(bt42(0xff),   crop(bt42(0x00ff00), 8, 16));
-	ASSERT_EQ(bt42(0x8001), crop(bt42(0x080010), 4, 23));
+	ASSERT_EQ(bt8(0x00),   crop<8>(bt42(0x00ff00)));
+	ASSERT_EQ(bt8(0xff),   crop<8>(bt42(0x00ff00), 8));
+	ASSERT_EQ(bitset<16>(0x8001), crop<16>(bt42(0x180010), 4));
 }
 
 
