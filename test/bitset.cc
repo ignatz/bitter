@@ -105,7 +105,7 @@ TEST(Bitset, None)
 	ASSERT_FALSE(none(bt42(0x000100000)));
 }
 
-#include "bitter/bitter.h"
+#include "bitter/util.h"
 
 TEST(Bitset, Conversion)
 {

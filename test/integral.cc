@@ -110,7 +110,7 @@ TEST(Integral, None)
 	ASSERT_FALSE(none(0x000100000));
 }
 
-#include "bitter/bitter.h"
+#include "bitter/util.h"
 
 TEST(Integral, Conversion)
 {
