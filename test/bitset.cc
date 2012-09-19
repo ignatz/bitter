@@ -104,3 +104,14 @@ TEST(Bitset, None)
 	ASSERT_TRUE(none(bt42(0x0)));
 	ASSERT_FALSE(none(bt42(0x000100000)));
 }
+
+#include "bitter/bitter.h"
+
+TEST(Bitset, Conversion)
+{
+	ASSERT_EQ(std::string(sizeof(int)*8, '0'), str(std::bitset<sizeof(int)*8>(0)));
+	ASSERT_EQ(std::string(8, '1'), str<8>(std::bitset<sizeof(int)*8>(0xfeff)));
+	ASSERT_EQ(0,    convert(std::bitset<sizeof(int)*8>(0)));
+	ASSERT_EQ(0xff, convert(std::bitset<sizeof(int)*8>(0xff)));
+	ASSERT_EQ((unsigned char)0, convert(std::bitset<sizeof(char)*8>(0)));
+}

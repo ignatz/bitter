@@ -109,3 +109,14 @@ TEST(Integral, None)
 	ASSERT_TRUE(none(0x0));
 	ASSERT_FALSE(none(0x000100000));
 }
+
+#include "bitter/bitter.h"
+
+TEST(Integral, Conversion)
+{
+	ASSERT_EQ(std::string(sizeof(int)*8, '0'), str(0));
+	ASSERT_EQ(std::string(8, '1'), str<8>(0xfeff));
+	ASSERT_EQ(std::bitset<sizeof(int)*8>(0), convert(0));
+	ASSERT_EQ(std::bitset<sizeof(int)*8>(0xff), convert(0xff));
+	ASSERT_EQ(std::bitset<sizeof(char)*8>(0), convert((unsigned char)0));
+}
