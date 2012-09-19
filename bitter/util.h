@@ -15,11 +15,11 @@ using std::size_t;
 using std::bitset;
 
 // type converter
-template<size_t N, typename T = unsigned long>
+template<typename T = unsigned long, size_t N>
 inline
 T convert(bitset<N> const& t)
 {
-	return static_cast<T>(t.to_ulong());
+	return T(t.to_ulong());
 }
 
 template<typename T, size_t N = sizeof(T)*8>

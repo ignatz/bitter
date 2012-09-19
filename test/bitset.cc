@@ -108,8 +108,8 @@ TEST(Bitset, None)
 TEST(Bitset, Reverse)
 {
 	ASSERT_EQ(bt42(0), reverse(bt42(0)));
-	//ASSERT_EQ(bt42(0x2a800000000), reverse(bt42(0x55)));
-	//ASSERT_EQ(bt42(0xaaaaaaaaaaaaaaaa), reverse(bt42(0x5555555555555555)));
+	ASSERT_EQ(bt42(0x2a800000000), reverse(bt42(0x55)));
+	ASSERT_EQ(bt42(0xaaaaaaaaaaaaaaaa), reverse(bt42(0x5555555555555555)));
 	ASSERT_EQ(bt8(0xaa), reverse(bt8(0x55)));
 }
 
@@ -121,5 +121,7 @@ TEST(Bitset, Conversion)
 	ASSERT_EQ(std::string(8, '1'), str<8>(std::bitset<sizeof(int)*8>(0xfeff)));
 	ASSERT_EQ(0,    convert(std::bitset<sizeof(int)*8>(0)));
 	ASSERT_EQ(0xff, convert(std::bitset<sizeof(int)*8>(0xff)));
-	ASSERT_EQ((unsigned char)0, convert(std::bitset<sizeof(char)*8>(0)));
+	ASSERT_EQ((unsigned char)0, convert<unsigned char>(std::bitset<sizeof(char)*8>(0)));
+
+	ASSERT_EQ(bt8(0xff), convert<bt8>(bt42(0xff)));
 }
