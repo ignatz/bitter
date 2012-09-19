@@ -14,7 +14,7 @@ using std::bitset;
 // size
 template<size_t N>
 inline
-size_t size(bitset<N> t)
+size_t size(bitset<N> const& t)
 {
 	return t.size();
 }
@@ -91,7 +91,7 @@ bool test(bitset<N> const& t, size_t pos)
 // mask
 template<size_t N>
 inline
-bitset<N> mask(bitset<N> t, bitset<N> mask)
+bitset<N> mask(bitset<N> const& t, bitset<N> const& mask)
 {
 	return t & mask;
 }
@@ -100,7 +100,7 @@ bitset<N> mask(bitset<N> t, bitset<N> mask)
 // crop
 template<size_t N>
 inline
-bitset<N> crop(bitset<N> t, size_t begin, size_t end)
+bitset<N> crop(bitset<N> const& t, size_t begin, size_t end)
 {
 	bitset<N> m ((1<<(end+1)) - (1<<begin));
 	return mask(t, m) >> begin;
@@ -149,6 +149,24 @@ inline
 bool none(bitset<N> const& t)
 {
 	return t.none();
+}
+
+
+// reverse
+template<size_t N>
+inline
+bitset<N>
+reverse(bitset<N> t)
+{
+	bitset<N> r(t);
+	size_t s = t.size()-1;
+
+	for (t >>= 1; t.any(); t >>= 1) {
+		r <<= 1;
+		r |= t & bitset<N>(1);
+		s--;
+	}
+	return r <<= s;
 }
 
 } // namespace bit

@@ -105,6 +105,14 @@ TEST(Bitset, None)
 	ASSERT_FALSE(none(bt42(0x000100000)));
 }
 
+TEST(Bitset, Reverse)
+{
+	ASSERT_EQ(bt42(0), reverse(bt42(0)));
+	//ASSERT_EQ(bt42(0x2a800000000), reverse(bt42(0x55)));
+	//ASSERT_EQ(bt42(0xaaaaaaaaaaaaaaaa), reverse(bt42(0x5555555555555555)));
+	ASSERT_EQ(bt8(0xaa), reverse(bt8(0x55)));
+}
+
 #include "bitter/util.h"
 
 TEST(Bitset, Conversion)

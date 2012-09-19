@@ -18,7 +18,7 @@ inline
 BITTER_IF_INTEGRAL(T, size_t)
 size(T) noexcept
 {
-	return sizeof(T) * 8;
+	return sizeof(T)*8;
 }
 
 
@@ -38,7 +38,6 @@ flip(T t) noexcept
 {
 	return ~t;
 }
-
 
 
 // set
@@ -77,7 +76,6 @@ set(T t, size_t pos, bool value) noexcept
 }
 
 
-
 // reset
 template<typename T>
 inline
@@ -104,7 +102,6 @@ reset(T t, size_t pos0, Pos ... pos) noexcept
 	_reset(t, pos0);
 	return reset(t, pos...);
 }
-
 
 
 // test
@@ -186,7 +183,7 @@ count(T t) noexcept
 		((t>>2) & static_cast<T>(~static_cast<T>(0)/15*3));
 	t = (t + (t>>4)) & static_cast<T>(~static_cast<T>(0)/255*15);
 	return static_cast<T>(t * (static_cast<T>(~static_cast<T>(0)/255)))
-		>> (sizeof(T) - 1) * 8;
+		>> (sizeof(T)-1)*8;
 }
 
 
@@ -261,6 +258,22 @@ BITTER_IF_INTEGRAL(T, bool)
 none(T t) noexcept
 {
 	return !t;
+}
+
+
+// reverse
+template<typename T>
+inline
+BITTER_IF_INTEGRAL(T, T)
+reverse(T t) noexcept
+{
+	size_t s = sizeof(T)*8;
+	typename std::make_unsigned<T>::type mask = ~0;
+	while (s >>= 1) {
+		mask ^= (mask << s);
+		t = ((t >> s) & mask) | ((t << s) & ~mask);
+	}
+	return t;
 }
 
 } // namespace bit

@@ -110,6 +110,16 @@ TEST(Integral, None)
 	ASSERT_FALSE(none(0x000100000));
 }
 
+TEST(Integral, Reverse)
+{
+	ASSERT_EQ(0, reverse(0x0));
+	ASSERT_EQ((size_t)0xaa00000000000000, reverse((size_t)0x55));
+	ASSERT_EQ((int64_t)0x0aa0000000000000, reverse((int64_t)0x550));
+	ASSERT_EQ((int64_t)0xaaa0000000000000, reverse((int64_t)0x555));
+	ASSERT_EQ((char)0xaa, reverse((char)0x55));
+	ASSERT_EQ((unsigned char)0xaa, reverse((unsigned char)0x55));
+}
+
 #include "bitter/util.h"
 
 TEST(Integral, Conversion)
