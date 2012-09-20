@@ -126,3 +126,9 @@ TEST(Bitset, Conversion)
 
 	ASSERT_EQ(bt8(0xff), convert<bt8>(bt42(0xff)));
 }
+
+TEST(Bitset, Concat)
+{
+	ASSERT_EQ(bitset<16>(0x1155), concat(bt8(0x11), bt8(0x55)));
+	ASSERT_EQ(bitset<32>(0x11551155), concat(bt8(0x11), bt8(0x55), concat(bt8(0x11), bt8(0x55))));
+}

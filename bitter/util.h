@@ -6,6 +6,8 @@
 #include <bitset>
 #include <string>
 
+#include "bitter/detail/detail.h"
+
 #define BITTER_IF_INTEGRAL(T, RET) \
 	typename std::enable_if<(std::is_integral<T>::value), RET>::type
 
@@ -62,6 +64,23 @@ BITTER_IF_INTEGRAL(T, std::string)
 str(T t)
 {
 	return convert<T, Len>(t).to_string();
+}
+
+
+// concatenation of bitsets
+inline
+bitset<0> concat()
+{
+	return bitset<0> {};
+}
+
+template<size_t N, size_t ... Ns>
+bitset<detail::sum<N, Ns...>::value>
+concat(bitset<N> const& t, bitset<Ns> const& ... ts)
+{
+	typedef bitset<detail::sum<N, Ns...>::value> type;
+	return convert<type>(t) << detail::sum<Ns...>::value
+		| convert<type>(concat(ts...));
 }
 
 } // namespace bit
