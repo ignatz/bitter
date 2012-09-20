@@ -68,10 +68,11 @@ str(T t)
 
 
 // concatenation of bitsets
+template<size_t N>
 inline
-bitset<0> concat()
+bitset<N> concat(bitset<N> const& t)
 {
-	return bitset<0> {};
+	return t;
 }
 
 template<size_t N, size_t ... Ns>
