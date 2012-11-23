@@ -11,27 +11,21 @@ def options(opt):
 def configure(cfg):
     recurse(cfg)
 
-    cfg.env.INCLUDES_BITTER_TEST = ['.',]
-    cfg.env.CXXFLAGS_BITTER_TEST = [
-            '-O1',
-            '-g',
-            '-std=c++0x',
-            '-Wall',
-            '-Wextra',
-            '-pedantic',
-        ]
-
 def build(bld):
     recurse(bld)
 
     bld.program(
         source       = bld.path.ant_glob('*.cc'),
         target       = 'main',
-        use          = [
-            'BITTER_TEST',
-            'bitter',
-            'gtest',
-            ],
+        includes     = '.',
         install_path = 'bin',
+        use          = ['bitter', 'gtest'],
+        cxxflags     = [
+                '-O1',
+                '-g',
+                '-std=c++0x',
+                '-Wall',
+                '-Wextra',
+                '-pedantic',
+            ],
     )
-
