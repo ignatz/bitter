@@ -139,7 +139,7 @@ typename std::enable_if<std::is_signed<T>::value, size_t>::type
 count(T t) noexcept
 {
 	// Brian Kernighan's way
-	size_t c {0};
+	size_t c = 0;
 	for (; t; c++)
 		t &= t - 1;
 	return c;

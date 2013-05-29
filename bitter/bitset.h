@@ -102,7 +102,13 @@ template<size_t Len, size_t N>
 inline
 bitset<Len> crop(bitset<N> const& t, size_t offset = 0)
 {
-	return bitset<Len>(t.to_ullong() >> offset);
+	bitset<Len> r;
+	size_t c = 0;
+
+	while (c < Len && offset<N) {
+		r[c++] = t.test(offset++);
+	}
+	return r;
 }
 
 

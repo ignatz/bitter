@@ -58,6 +58,33 @@ TEST(Bitset, Crop)
 	ASSERT_EQ(bitset<16>(0x8001), crop<16>(bt42(0x180010), 4));
 }
 
+std::string gen_string(std::bitset<4> const& pattern, size_t repetitions)
+{
+	std::string s;
+	while (repetitions) {
+		s += pattern.to_string();
+		repetitions--;
+	}
+	return s;
+}
+
+// regression test for issue #2
+TEST(Bitset, CropRegression2)
+{
+	std::string n(128, '1');
+	ASSERT_EQ(128, n.size());
+	ASSERT_EQ(bitset<8>(0xff), crop<8>(bitset<128>(n)));
+	ASSERT_EQ(bitset<256>(n), crop<256>(bitset<128>(n)));
+
+	for (size_t offset = 0; offset<128; ++offset)
+	{
+		ASSERT_EQ(bitset<256>(n, 0, 128-offset), crop<256>(bitset<128>(n, offset)));
+	}
+
+	typedef std::bitset<4> bt4;
+	 ASSERT_EQ(bitset<256>(gen_string(bt4("0101"), 31)),
+			   crop<256>(bitset<128>(gen_string(bt4("0101"), 32), 4)));
+}
 
 TEST(Bitset, Flip)
 {
