@@ -152,6 +152,10 @@ TEST(Bitset, Conversion)
 	ASSERT_EQ((unsigned char)0, convert<unsigned char>(std::bitset<sizeof(char)*8>(0)));
 
 	ASSERT_EQ(bt8(0xff), convert<bt8>(bt42(0xff)));
+
+	ASSERT_NO_THROW(convert(std::bitset<sizeof(unsigned long long)*8>(0x0)));
+	// the following mustn't compile
+	//convert(std::bitset<sizeof(unsigned long long)*8+1>(0x0)),
 }
 
 TEST(Bitset, Concat)
