@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "bitter/bitset.h"
+#include <bitter/bitset.h>
 
 using namespace bit;
 

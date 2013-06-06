@@ -6,7 +6,8 @@
 #include <bitset>
 #include <string>
 
-#include "bitter/detail/detail.h"
+#include <bitter/define.h>
+#include <bitter/detail/detail.h>
 
 #define BITTER_IF_INTEGRAL(T, RET) \
 	typename std::enable_if<(std::is_integral<T>::value), RET>::type

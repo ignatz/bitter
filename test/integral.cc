@@ -1,8 +1,16 @@
 #include <gtest/gtest.h>
 
-#include "bitter/integral.h"
+// test custom functions rather than compiler builtin implementations
+#define BITTER_USE_BUILTIN 0
+
+#include <bitter/integral.h>
 
 using namespace bit;
+
+TEST(Integral, Defines)
+{
+	ASSERT_EQ(8, BITTER_BITS_PER_BYTE);
+}
 
 TEST(Integral, Set)
 {
@@ -75,6 +83,13 @@ TEST(Integral, Count)
 	ASSERT_EQ(4, count(0x1111));
 	ASSERT_EQ(4, count((size_t)0x1111));
 	ASSERT_EQ(4, count((unsigned int)0x1111));
+
+	// test custom functions (builtins only: u, ul, ull)
+	//ASSERT_EQ(2, count((unsigned char)0x11));
+	ASSERT_EQ(4, count((unsigned short)0x1111));
+
+	ASSERT_EQ(2, count((int)0x11));
+	ASSERT_EQ(4, count((long)0x1111));
 }
 
 TEST(Integral, Parity)
@@ -91,6 +106,15 @@ TEST(Integral, Parity)
 
 	for (size_t ii = 0; ii<64-1; ++ii)
 		ASSERT_FALSE(parity(set(set((uint64_t)0x0, ii), ii+1)));
+
+	// test custom functions (builtins only: u, ul, ull)
+	ASSERT_TRUE(parity((unsigned char)0x01));
+	ASSERT_TRUE(parity((unsigned short)0x01));
+	ASSERT_FALSE(parity((unsigned char)0x11));
+	ASSERT_FALSE(parity((unsigned short)0x1111));
+
+	ASSERT_FALSE(parity((int)0x11));
+	ASSERT_FALSE(parity((long)0x1111));
 }
 
 TEST(Integral, All)
