@@ -1,5 +1,7 @@
 # `bitter` Bit Manipulation Library
 
+[![Build Status](https://travis-ci.org/ignatz/bitter.png?branch=master)](https://travis-ci.org/ignatz/bitter)
+
 `bitter` provides a common interface for bit operations on integral types as
 well as `std::bitset`. If you have ever worked with `bitset` before the
 interface should feel instantly familiar.
