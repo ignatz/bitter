@@ -3,7 +3,7 @@
 
 #pragma once
 
-namespace bit{
+namespace bit {
 namespace detail {
 
 template<size_t ... Ns>

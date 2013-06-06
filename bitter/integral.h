@@ -16,7 +16,6 @@ using std::size_t;
 
 // size
 template<typename T>
-inline
 BITTER_IF_INTEGRAL(T, size_t)
 size(T) noexcept
 {
@@ -26,7 +25,6 @@ size(T) noexcept
 
 // flip
 template<typename T>
-inline
 BITTER_IF_INTEGRAL(T, T)
 flip(T t, size_t pos) noexcept
 {
@@ -34,7 +32,6 @@ flip(T t, size_t pos) noexcept
 }
 
 template<typename T>
-inline
 BITTER_IF_INTEGRAL(T, T)
 flip(T t) noexcept
 {
@@ -44,7 +41,6 @@ flip(T t) noexcept
 
 // set
 template<typename T>
-inline
 BITTER_IF_INTEGRAL(T, void)
 _set(T& t, size_t pos) noexcept
 {
@@ -52,7 +48,6 @@ _set(T& t, size_t pos) noexcept
 }
 
 template<typename T>
-inline
 BITTER_IF_INTEGRAL(T, T)
 set(T t, size_t pos) noexcept
 {
@@ -61,7 +56,6 @@ set(T t, size_t pos) noexcept
 }
 
 template<typename T, typename ... Pos>
-inline
 BITTER_IF_INTEGRAL(T, T)
 set(T t, size_t pos0, size_t pos1, Pos ... pos) noexcept
 {
@@ -70,7 +64,6 @@ set(T t, size_t pos0, size_t pos1, Pos ... pos) noexcept
 }
 
 template<typename T>
-inline
 BITTER_IF_INTEGRAL(T, T)
 set(T t, size_t pos, bool value) noexcept
 {
@@ -80,7 +73,6 @@ set(T t, size_t pos, bool value) noexcept
 
 // reset
 template<typename T>
-inline
 BITTER_IF_INTEGRAL(T, void)
 _reset(T& t, size_t pos) noexcept
 {
@@ -88,7 +80,6 @@ _reset(T& t, size_t pos) noexcept
 }
 
 template<typename T>
-inline
 BITTER_IF_INTEGRAL(T, T)
 reset(T t, size_t pos) noexcept
 {
@@ -97,7 +88,6 @@ reset(T t, size_t pos) noexcept
 }
 
 template<typename T, typename ... Pos>
-inline
 BITTER_IF_INTEGRAL(T, T)
 reset(T t, size_t pos0, Pos ... pos) noexcept
 {
@@ -108,7 +98,6 @@ reset(T t, size_t pos0, Pos ... pos) noexcept
 
 // test
 template<typename T>
-inline
 BITTER_IF_INTEGRAL(T, bool)
 test(T t, size_t pos) noexcept
 {
@@ -118,7 +107,6 @@ test(T t, size_t pos) noexcept
 
 // mask
 template<typename T>
-inline
 BITTER_IF_INTEGRAL(T, T)
 mask(T t, T mask) noexcept
 {
@@ -128,7 +116,6 @@ mask(T t, T mask) noexcept
 
 // crop
 template<size_t Len, typename T>
-inline
 BITTER_IF_INTEGRAL(T, T)
 crop(T t, size_t offset = 0) noexcept
 {
@@ -151,28 +138,24 @@ count(T t) noexcept
 #if BITTER_USE_BUILTIN && defined(__GNUG__) && __GNUG__ >= 4
 
 inline
-size_t
-count(unsigned int t) noexcept
+size_t count(unsigned int t) noexcept
 {
 	return __builtin_popcount(t);
 }
 
 inline
-size_t
-count(unsigned long t) noexcept
+size_t count(unsigned long t) noexcept
 {
 	return __builtin_popcountl(t);
 }
 
 inline
-size_t
-count(unsigned long long t) noexcept
+size_t count(unsigned long long t) noexcept
 {
 	return __builtin_popcountll(t);
 }
 
 template<typename T>
-inline
 typename std::enable_if<std::is_unsigned<T>::value, size_t>::type
 count(T t) noexcept
 {
@@ -182,12 +165,12 @@ count(T t) noexcept
 #else
 
 template<typename T>
-inline
 typename std::enable_if<std::is_unsigned<T>::value, size_t>::type
 count(T t) noexcept
 {
 	static_assert(sizeof(T) <= 16, "unsigned integral type too long");
 
+	// from: http://graphics.stanford.edu/~seander/bithacks.html
 	t = t - ((t>>1) & static_cast<T>(~static_cast<T>(0)/3));
 	t = (t & static_cast<T>(~static_cast<T>(0))/15*3) +
 		((t >> 2) & static_cast<T>(~static_cast<T>(0)/15*3));
@@ -201,7 +184,6 @@ count(T t) noexcept
 
 // parity
 template<typename T>
-inline
 typename std::enable_if<std::is_signed<T>::value, size_t>::type
 parity(T t) noexcept
 {
@@ -211,28 +193,24 @@ parity(T t) noexcept
 #if BITTER_USE_BUILTIN && defined(__GNUG__) && __GNUG__ >= 4
 
 inline
-bool
-parity(unsigned int t) noexcept
+bool parity(unsigned int t) noexcept
 {
 	return __builtin_parity(t);
 }
 
 inline
-bool
-parity(unsigned long t) noexcept
+bool parity(unsigned long t) noexcept
 {
 	return __builtin_parityl(t);
 }
 
 inline
-bool
-parity(unsigned long long t) noexcept
+bool parity(unsigned long long t) noexcept
 {
 	return __builtin_parityll(t);
 }
 
 template<typename T>
-inline
 typename std::enable_if<std::is_unsigned<T>::value, bool>::type
 parity(T t) noexcept
 {
@@ -242,7 +220,6 @@ parity(T t) noexcept
 #else
 
 template<typename T>
-inline
 typename std::enable_if<std::is_unsigned<T>::value, bool>::type
 parity(T t) noexcept
 {
@@ -257,7 +234,6 @@ parity(T t) noexcept
 
 // all
 template<typename T>
-inline
 BITTER_IF_INTEGRAL(T, bool)
 all(T t) noexcept
 {
@@ -267,7 +243,6 @@ all(T t) noexcept
 
 // any
 template<typename T>
-inline
 BITTER_IF_INTEGRAL(T, bool)
 any(T t) noexcept
 {
@@ -277,7 +252,6 @@ any(T t) noexcept
 
 // none
 template<typename T>
-inline
 BITTER_IF_INTEGRAL(T, bool)
 none(T t) noexcept
 {
@@ -287,7 +261,6 @@ none(T t) noexcept
 
 // reverse
 template<typename T>
-inline
 BITTER_IF_INTEGRAL(T, T)
 reverse(T t) noexcept
 {

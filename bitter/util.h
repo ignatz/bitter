@@ -19,7 +19,6 @@ using std::bitset;
 
 // type converter
 template<typename T = unsigned long long, size_t N>
-inline
 T convert(bitset<N> const& t)
 {
 	static_assert(N <= sizeof(T)*BITTER_BITS_PER_BYTE, "unsupported conversion");
@@ -27,7 +26,6 @@ T convert(bitset<N> const& t)
 }
 
 template<typename T, size_t N = sizeof(T)*BITTER_BITS_PER_BYTE>
-inline
 BITTER_IF_INTEGRAL(T, bitset<N>)
 convert(T t) noexcept
 {
@@ -37,23 +35,18 @@ convert(T t) noexcept
 
 // string converter
 template<size_t N>
-inline
-std::string
-str(bitset<N> const& t)
+std::string str(bitset<N> const& t)
 {
 	return t.to_string();
 }
 
 template<size_t Len, size_t N>
-inline
-std::string
-str(bitset<N> const& t)
+std::string str(bitset<N> const& t)
 {
 	return bitset<Len>(t.to_ullong()).to_string();
 }
 
 template<typename T>
-inline
 BITTER_IF_INTEGRAL(T, std::string)
 str(T t)
 {
@@ -61,7 +54,6 @@ str(T t)
 }
 
 template<size_t Len, typename T>
-inline
 BITTER_IF_INTEGRAL(T, std::string)
 str(T t)
 {
@@ -71,7 +63,6 @@ str(T t)
 
 // concatenation of bitsets
 template<size_t N>
-inline
 bitset<N> concat(bitset<N> const& t)
 {
 	return t;
