@@ -83,16 +83,16 @@ TEST(Integral, Flip)
 
 TEST(Integral, Count)
 {
-	ASSERT_EQ(4, count(0x1111));
-	ASSERT_EQ(4, count((size_t)0x1111));
-	ASSERT_EQ(4, count((unsigned int)0x1111));
+	ASSERT_EQ(4u, count(0x1111));
+	ASSERT_EQ(4u, count((size_t)0x1111));
+	ASSERT_EQ(4u, count((unsigned int)0x1111));
 
 	// test custom functions (builtins only: u, ul, ull)
 	//ASSERT_EQ(2, count((unsigned char)0x11));
-	ASSERT_EQ(4, count((unsigned short)0x1111));
+	ASSERT_EQ(4u, count((unsigned short)0x1111));
 
-	ASSERT_EQ(2, count((int)0x11));
-	ASSERT_EQ(4, count((long)0x1111));
+	ASSERT_EQ(2u, count((int)0x11));
+	ASSERT_EQ(4u, count((long)0x1111));
 }
 
 TEST(Integral, Parity)

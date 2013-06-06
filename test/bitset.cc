@@ -75,7 +75,7 @@ std::string gen_string(std::bitset<4> const& pattern, size_t repetitions)
 TEST(Bitset, CropRegression2)
 {
 	std::string n(128, '1');
-	ASSERT_EQ(128, n.size());
+	ASSERT_EQ(128u, n.size());
 	ASSERT_EQ(bitset<8>(0xff), crop<8>(bitset<128>(n)));
 	ASSERT_EQ(bitset<256>(n), crop<256>(bitset<128>(n)));
 
@@ -107,7 +107,7 @@ TEST(Bitset, Flip)
 
 TEST(Bitset, Count)
 {
-	ASSERT_EQ(4, count(bt42(0x1111)));
+	ASSERT_EQ(4u, count(bt42(0x1111)));
 }
 
 TEST(Bitset, Parity)
@@ -150,8 +150,8 @@ TEST(Bitset, Conversion)
 {
 	ASSERT_EQ(std::string(sizeof(int)*8, '0'), str(std::bitset<sizeof(int)*8>(0)));
 	ASSERT_EQ(std::string(8, '1'), str<8>(std::bitset<sizeof(int)*8>(0xfeff)));
-	ASSERT_EQ(0,    convert(std::bitset<sizeof(int)*8>(0)));
-	ASSERT_EQ(0xff, convert(std::bitset<sizeof(int)*8>(0xff)));
+	ASSERT_EQ(0ull, convert(std::bitset<sizeof(int)*8>(0)));
+	ASSERT_EQ((unsigned long long)0xff, convert(std::bitset<sizeof(int)*8>(0xff)));
 	ASSERT_EQ((unsigned char)0, convert<unsigned char>(std::bitset<sizeof(char)*8>(0)));
 
 	ASSERT_EQ(bt8(0xff), convert<bt8>(bt42(0xff)));
