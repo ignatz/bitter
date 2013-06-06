@@ -11,6 +11,9 @@ def options(opt):
 def configure(cfg):
     recurse(cfg)
 
+    # use $PWD as default prefix for tests, if no prefix is given explicitly
+    cfg.env.PREFIX = cfg.env.PREFIX if os.getenv('PREFIX') else cfg.path.abspath()
+
 def build(bld):
     recurse(bld)
 
