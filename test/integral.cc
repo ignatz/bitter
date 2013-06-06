@@ -7,6 +7,15 @@
 #define BITTER_USE_BUILTIN 0
 
 #include <bitter/integral.h>
+#include <bitter/exception.h>
+
+#define RANGE_CHECK(T, LEN, FUNC) \
+	do { \
+		for (size_t ii=0; ii<LEN; ++ii) \
+			ASSERT_NO_THROW(FUNC(a, ii)); \
+		ASSERT_THROW(FUNC(a, LEN+1), bitter_exception); \
+	} while(false)
+
 
 using namespace bit;
 
@@ -30,6 +39,11 @@ TEST(Integral, Set)
 
 	ASSERT_EQ(7, set(0, 0,1,2));
 	ASSERT_EQ(0, set(1, 0, false));
+
+	{ // test range checking
+		uint64_t a=0xff;
+		RANGE_CHECK(a, sizeof(a)*BITTER_BITS_PER_BYTE, set);
+	}
 }
 
 TEST(Integral, Reset)
@@ -43,6 +57,11 @@ TEST(Integral, Reset)
 
 	ASSERT_EQ((unsigned char)0x07, n);
 	ASSERT_EQ(n, flip(0x87, 7));
+
+	{ // test range checking
+		uint64_t a=0xff;
+		RANGE_CHECK(a, sizeof(a)*BITTER_BITS_PER_BYTE, reset);
+	}
 }
 
 TEST(Integral, Test)
@@ -52,6 +71,11 @@ TEST(Integral, Test)
 	ASSERT_TRUE(test(7, 2));
 	ASSERT_FALSE(test(7, 3));
 	ASSERT_FALSE(test(7, 4));
+
+	{ // test range checking
+		uint64_t a=0xff;
+		RANGE_CHECK(a, sizeof(a)*BITTER_BITS_PER_BYTE, test);
+	}
 }
 
 TEST(Integral, Mask)

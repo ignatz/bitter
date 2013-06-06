@@ -4,6 +4,15 @@
 #include <gtest/gtest.h>
 
 #include <bitter/bitset.h>
+#include <bitter/exception.h>
+
+#define RANGE_CHECK(T, LEN, FUNC) \
+	do { \
+		for (size_t ii=0; ii<LEN; ++ii) \
+			ASSERT_NO_THROW(FUNC(a, ii)); \
+		ASSERT_THROW(FUNC(a, LEN+1), bitter_exception); \
+	} while(false)
+
 
 using namespace bit;
 
@@ -25,6 +34,12 @@ TEST(Bitset, Set)
 
 	ASSERT_EQ(bt42(7), set(bt42(0), 0,1,2));
 	ASSERT_EQ(bt42(0), set(bt42(1), 0, false));
+
+	{ // test range checking
+		size_t const len = 444;
+		bitset<len> a(std::string(len, '1'));
+		RANGE_CHECK(a, len, set);
+	}
 }
 
 TEST(Bitset, Reset)
@@ -37,6 +52,12 @@ TEST(Bitset, Reset)
 
 	ASSERT_EQ(bt42(0x07), n);
 	ASSERT_EQ(n, flip(bt42(0x87), 7));
+
+	{ // test range checking
+		size_t const len = 444;
+		bitset<len> a(std::string(len, '1'));
+		RANGE_CHECK(a, len, reset);
+	}
 }
 
 TEST(Bitset, Test)
@@ -46,6 +67,12 @@ TEST(Bitset, Test)
 	ASSERT_TRUE( test(bt42(7), 2));
 	ASSERT_FALSE(test(bt42(7), 3));
 	ASSERT_FALSE(test(bt42(7), 4));
+
+	{ // test range checking
+		size_t const len = 444;
+		bitset<len> a(std::string(len, '1'));
+		RANGE_CHECK(a, len, test);
+	}
 }
 
 TEST(Bitset, Mask)
@@ -59,6 +86,14 @@ TEST(Bitset, Crop)
 	ASSERT_EQ(bt8(0x00),   crop<8>(bt42(0x00ff00)));
 	ASSERT_EQ(bt8(0xff),   crop<8>(bt42(0x00ff00), 8));
 	ASSERT_EQ(bitset<16>(0x8001), crop<16>(bt42(0x180010), 4));
+
+	{ // test cropping out of bitset range
+		std::string n(128, '1');
+		ASSERT_EQ(128u, n.size());
+		bitset<128> a(n);
+		ASSERT_TRUE(test(a, 127));
+		ASSERT_EQ(bitset<16>(0x0), crop<16>(a, 128));
+	}
 }
 
 std::string gen_string(std::bitset<4> const& pattern, size_t repetitions)

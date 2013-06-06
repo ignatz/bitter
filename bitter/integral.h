@@ -26,8 +26,9 @@ size(T) noexcept
 // flip
 template<typename T>
 BITTER_IF_INTEGRAL(T, T)
-flip(T t, size_t pos) noexcept
+flip(T t, size_t pos)
 {
+	BITTER_RANGE_CHECK(sizeof(T) * BITTER_BITS_PER_BYTE, pos)
 	return t ^ (1<<pos);
 }
 
@@ -42,14 +43,15 @@ flip(T t) noexcept
 // set
 template<typename T>
 BITTER_IF_INTEGRAL(T, void)
-_set(T& t, size_t pos) noexcept
+_set(T& t, size_t pos)
 {
+	BITTER_RANGE_CHECK(sizeof(T) * BITTER_BITS_PER_BYTE, pos)
 	t |= (1<<pos);
 }
 
 template<typename T>
 BITTER_IF_INTEGRAL(T, T)
-set(T t, size_t pos) noexcept
+set(T t, size_t pos)
 {
 	_set(t, pos);
 	return t;
@@ -57,7 +59,7 @@ set(T t, size_t pos) noexcept
 
 template<typename T, typename ... Pos>
 BITTER_IF_INTEGRAL(T, T)
-set(T t, size_t pos0, size_t pos1, Pos ... pos) noexcept
+set(T t, size_t pos0, size_t pos1, Pos ... pos)
 {
 	_set(t, pos0);
 	return set(t, pos1, pos...);
@@ -65,8 +67,9 @@ set(T t, size_t pos0, size_t pos1, Pos ... pos) noexcept
 
 template<typename T>
 BITTER_IF_INTEGRAL(T, T)
-set(T t, size_t pos, bool value) noexcept
+set(T t, size_t pos, bool value)
 {
+	BITTER_RANGE_CHECK(sizeof(T) * BITTER_BITS_PER_BYTE, pos)
 	return (t & ~(1<<pos)) | (-value & (1<<pos));
 }
 
@@ -74,14 +77,15 @@ set(T t, size_t pos, bool value) noexcept
 // reset
 template<typename T>
 BITTER_IF_INTEGRAL(T, void)
-_reset(T& t, size_t pos) noexcept
+_reset(T& t, size_t pos)
 {
+	BITTER_RANGE_CHECK(sizeof(T) * BITTER_BITS_PER_BYTE, pos)
 	t &= flip(t, pos);
 }
 
 template<typename T>
 BITTER_IF_INTEGRAL(T, T)
-reset(T t, size_t pos) noexcept
+reset(T t, size_t pos)
 {
 	_reset(t, pos);
 	return t;
@@ -89,7 +93,7 @@ reset(T t, size_t pos) noexcept
 
 template<typename T, typename ... Pos>
 BITTER_IF_INTEGRAL(T, T)
-reset(T t, size_t pos0, Pos ... pos) noexcept
+reset(T t, size_t pos0, Pos ... pos)
 {
 	_reset(t, pos0);
 	return reset(t, pos...);
@@ -99,8 +103,9 @@ reset(T t, size_t pos0, Pos ... pos) noexcept
 // test
 template<typename T>
 BITTER_IF_INTEGRAL(T, bool)
-test(T t, size_t pos) noexcept
+test(T t, size_t pos)
 {
+	BITTER_RANGE_CHECK(sizeof(T) * BITTER_BITS_PER_BYTE, pos)
 	return t & (1<<pos);
 }
 

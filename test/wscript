@@ -30,5 +30,6 @@ def build(bld):
                 '-Wall',
                 '-Wextra',
                 '-pedantic',
+                #'-DBITTER_NO_RANGE_CHECK',
             ],
     )

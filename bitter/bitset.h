@@ -6,6 +6,8 @@
 #include <type_traits>
 #include <bitset>
 
+#include <bitter/define.h>
+
 namespace bit {
 
 using std::size_t;
@@ -23,6 +25,7 @@ size_t size(bitset<N> const& t)
 template<size_t N>
 bitset<N> flip(bitset<N> t, size_t pos)
 {
+	BITTER_RANGE_CHECK(N, pos)
 	return t.set(pos, !t.test(pos));
 }
 
@@ -37,6 +40,7 @@ bitset<N> flip(bitset<N> t)
 template<size_t N>
 bitset<N> set(bitset<N> t, size_t pos)
 {
+	BITTER_RANGE_CHECK(N, pos)
 	t.set(pos);
 	return t;
 }
@@ -44,6 +48,7 @@ bitset<N> set(bitset<N> t, size_t pos)
 template<size_t N, typename ... Pos>
 bitset<N> set(bitset<N> t, size_t pos0, size_t pos1, Pos ... pos)
 {
+	BITTER_RANGE_CHECK(N, pos0)
 	t.set(pos0);
 	return set(t, pos1, pos...);
 }
@@ -51,6 +56,7 @@ bitset<N> set(bitset<N> t, size_t pos0, size_t pos1, Pos ... pos)
 template<size_t N>
 bitset<N> set(bitset<N> t, size_t pos, bool value)
 {
+	BITTER_RANGE_CHECK(N, pos)
 	return t.set(pos, value);
 }
 
@@ -59,6 +65,7 @@ bitset<N> set(bitset<N> t, size_t pos, bool value)
 template<size_t N>
 bitset<N> reset(bitset<N> t, size_t pos)
 {
+	BITTER_RANGE_CHECK(N, pos)
 	t.reset(pos);
 	return t;
 }
@@ -75,6 +82,7 @@ bitset<N> reset(bitset<N> t, size_t pos0, Pos ... pos)
 template<size_t N>
 bool test(bitset<N> const& t, size_t pos)
 {
+	BITTER_RANGE_CHECK(N, pos)
 	return t.test(pos);
 }
 
