@@ -20,22 +20,13 @@ using std::bitset;
 // type converter
 template<typename T = unsigned long long, size_t N>
 inline
-typename std::enable_if<(N <= sizeof(T)*8),T>::type
-convert(bitset<N> const& t)
+T convert(bitset<N> const& t)
 {
+	static_assert(N <= sizeof(T)*BITTER_BITS_PER_BYTE, "unsupported conversion");
 	return T(t.to_ullong());
 }
 
-template<typename T = unsigned long long, size_t N>
-inline
-typename std::enable_if<(N > sizeof(T)*8),T>::type
-convert(bitset<N> const&)
-{
-	static_assert(N <= sizeof(T)*8, "unsupported conversion");
-	return 0;
-}
-
-template<typename T, size_t N = sizeof(T)*8>
+template<typename T, size_t N = sizeof(T)*BITTER_BITS_PER_BYTE>
 inline
 BITTER_IF_INTEGRAL(T, bitset<N>)
 convert(T t) noexcept
