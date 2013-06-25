@@ -1,10 +1,10 @@
 // Copyright 2013, Sebastian Jeltsch (sjeltsch@kip.uni-heidelberg.de)
 // Distributed under the terms of the LGPLv3 or newer.
 
-#include <gtest/gtest.h>
-
 // test custom functions rather than compiler builtin implementations
 #define BITTER_USE_BUILTIN 0
+
+#include "test/test.h"
 
 #include <bitter/integral.h>
 #include <bitter/exception.h>
@@ -18,6 +18,14 @@
 
 
 using namespace bit;
+
+TEST(Integral, Size)
+{
+	ASSERT_EQ(BITTER_BITS_PER_BYTE*sizeof(char), size(char()));
+	ASSERT_EQ(BITTER_BITS_PER_BYTE*sizeof(short), size(short()));
+	ASSERT_EQ(BITTER_BITS_PER_BYTE*sizeof(int), size(int()));
+	ASSERT_EQ(BITTER_BITS_PER_BYTE*sizeof(size_t), size(size_t()));
+}
 
 TEST(Integral, Defines)
 {
@@ -62,6 +70,19 @@ TEST(Integral, Reset)
 		uint64_t a=0xff;
 		RANGE_CHECK(a, sizeof(a)*BITTER_BITS_PER_BYTE, reset);
 	}
+
+	REPEAT(100,
+		size_t const r = random();
+		for (size_t ii=0; ii<size(r); ++ii)
+		{
+			if (test(r, ii)) {
+				ASSERT_NE(test(r, ii), test(reset(r, ii), ii));
+				ASSERT_EQ(test(r, ii), test(set(reset(r, ii), ii), ii));
+			} else {
+				ASSERT_EQ(test(r, ii), test(reset(r, ii), ii));
+			}
+		}
+	);
 }
 
 TEST(Integral, Test)
@@ -76,12 +97,24 @@ TEST(Integral, Test)
 		uint64_t a=0xff;
 		RANGE_CHECK(a, sizeof(a)*BITTER_BITS_PER_BYTE, test);
 	}
+
+	REPEAT(100,
+		size_t const r = random();
+		for(size_t ii=0; ii<size(r); ++ii)
+			ASSERT_EQ((r & (1<<ii)) > 0, test(r, ii));
+	);
 }
 
 TEST(Integral, Mask)
 {
 	ASSERT_EQ(0x0,      mask(0x00ff00, 0xff00ff));
 	ASSERT_EQ(0x0f0f0f, mask(0xffffff, 0x0f0f0f));
+
+	REPEAT(10000,
+		auto const v = random<size_t>();
+		auto const m = random<size_t>();
+		ASSERT_EQ(v & m, mask(v, m));
+	);
 }
 
 TEST(Integral, Crop)
@@ -89,20 +122,22 @@ TEST(Integral, Crop)
 	ASSERT_EQ(0x00,   crop<8>(0x00ff00));
 	ASSERT_EQ(0xff,   crop<8>(0x00ff00, 8));
 	ASSERT_EQ(0x8001, crop<16>(0x180010, 4));
+
+	REPEAT(1000,
+		auto const r = random<uint64_t>();
+		ASSERT_EQ(b<23>(r>>27).to_ullong(), crop<23>(r, 27));
+	);
 }
 
 TEST(Integral, Flip)
 {
-	unsigned char x;
+	REPEAT(10000,
+		uint64_t const r = random<uint64_t>();
+		ASSERT_EQ(b<64>(r).flip(), flip(r));
 
-	x = flip(0);
-	ASSERT_EQ((unsigned char)0xff, x);
-
-	x = flip(1);
-	ASSERT_EQ((unsigned char)0xff - 1, x);
-
-	x = flip((char)0xff);
-	ASSERT_EQ(0, x);
+		for (size_t ii=0; ii<size(r); ++ii)
+			ASSERT_NE(test(r, ii), test(flip(r, ii), ii));
+	);
 }
 
 TEST(Integral, Count)
@@ -112,11 +147,12 @@ TEST(Integral, Count)
 	ASSERT_EQ(4u, count((unsigned int)0x1111));
 
 	// test custom functions (builtins only: u, ul, ull)
-	//ASSERT_EQ(2, count((unsigned char)0x11));
-	ASSERT_EQ(4u, count((unsigned short)0x1111));
+	ASSERT_EQ(2u, count((unsigned char)0x11));
 
-	ASSERT_EQ(2u, count((int)0x11));
-	ASSERT_EQ(4u, count((long)0x1111));
+	REPEAT(10000,
+		   short const r = random<short>();
+		   ASSERT_EQ(_count(r), count(r));
+	);
 }
 
 TEST(Integral, Parity)
@@ -128,38 +164,56 @@ TEST(Integral, Parity)
 	ASSERT_FALSE(parity((uint64_t)0x0101000001010101));
 	ASSERT_FALSE(parity((uint64_t)0x0101000001010101));
 
-	for (size_t ii = 0; ii<64; ++ii)
-		ASSERT_TRUE(parity(set((uint64_t)0x0, ii)));
-
-	for (size_t ii = 0; ii<64-1; ++ii)
-		ASSERT_FALSE(parity(set(set((uint64_t)0x0, ii), ii+1)));
-
 	// test custom functions (builtins only: u, ul, ull)
-	ASSERT_TRUE(parity((unsigned char)0x01));
-	ASSERT_TRUE(parity((unsigned short)0x01));
-	ASSERT_FALSE(parity((unsigned char)0x11));
-	ASSERT_FALSE(parity((unsigned short)0x1111));
+	REPEAT(10000,
+		auto const s = random<short>();
+		ASSERT_EQ(_parity(s), parity(s));
 
-	ASSERT_FALSE(parity((int)0x11));
-	ASSERT_FALSE(parity((long)0x1111));
+		auto const l = random<long>();
+		ASSERT_EQ(_parity(l), parity(l));
+	);
 }
 
 TEST(Integral, All)
 {
 	ASSERT_TRUE(all((unsigned char)0xff));
 	ASSERT_FALSE(all(0xff));
+
+	REPEAT(10000,
+		auto const s = random<unsigned short>();
+		ASSERT_EQ(b<sizeof(short)*8>(s).all(), all(s));
+
+		auto const l = random<long>();
+		ASSERT_EQ(b<sizeof(long)*8>(l).all(), all(l));
+	);
 }
 
 TEST(Integral, Any)
 {
 	ASSERT_TRUE(any(0x00010000));
 	ASSERT_FALSE(any(0x0));
+
+	REPEAT(10000,
+		auto const s = random<unsigned short>();
+		ASSERT_EQ(b<sizeof(short)*8>(s).any(), any(s));
+
+		auto const l = random<long>();
+		ASSERT_EQ(b<sizeof(long)*8>(l).any(), any(l));
+	);
 }
 
 TEST(Integral, None)
 {
 	ASSERT_TRUE(none(0x0));
 	ASSERT_FALSE(none(0x000100000));
+
+	REPEAT(10000,
+		auto const s = random<unsigned short>();
+		ASSERT_EQ(b<sizeof(short)*8>(s).none(), none(s));
+
+		auto const l = random<long>();
+		ASSERT_EQ(b<sizeof(long)*8>(l).none(), none(l));
+	);
 }
 
 TEST(Integral, Reverse)
@@ -170,6 +224,17 @@ TEST(Integral, Reverse)
 	ASSERT_EQ((int64_t)0xaaa0000000000000, reverse((int64_t)0x555));
 	ASSERT_EQ((char)0xaa, reverse((char)0x55));
 	ASSERT_EQ((unsigned char)0xaa, reverse((unsigned char)0x55));
+
+	REPEAT(1000,
+		std::string const s = random_bit_string(64);
+		uint64_t const i = b<64>(s).to_ullong();
+		b<64> const ri = reverse(i);
+
+		ASSERT_EQ(i, reverse(reverse(i)));
+
+		for(size_t ii=0; ii<64; ++ii)
+			ASSERT_EQ(s[ii], ri[ii] ? '1' : '0');
+	);
 }
 
 #include "bitter/util.h"

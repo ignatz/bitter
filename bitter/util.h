@@ -18,7 +18,7 @@ using std::size_t;
 using std::bitset;
 
 // type converter
-template<typename T = unsigned long long, size_t N>
+template<typename T = size_t, size_t N>
 T convert(bitset<N> const& t)
 {
 	static_assert(N <= sizeof(T)*BITTER_BITS_PER_BYTE, "unsupported conversion");
@@ -30,6 +30,25 @@ BITTER_IF_INTEGRAL(T, bitset<N>)
 convert(T t) noexcept
 {
 	return bitset<N>(t);
+}
+
+
+template<size_t Len, size_t N>
+typename std::enable_if<
+	(N<=BITTER_BITS_PER_BYTE*sizeof(unsigned long long)),
+	std::bitset<Len>>::type
+extend(bitset<N> const& t)
+{
+	return std::bitset<Len>(t.to_ullong());
+}
+
+template<size_t Len, size_t N>
+typename std::enable_if<
+	(N>BITTER_BITS_PER_BYTE*sizeof(uintmax_t)),
+	std::bitset<Len>>::type
+extend(bitset<N> const& t)
+{
+	return std::bitset<Len>(t.to_string());
 }
 
 
