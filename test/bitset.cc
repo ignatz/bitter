@@ -153,8 +153,8 @@ TEST(Bitset, CropRegression2)
 		ASSERT_EQ(b<256>(n, 0, 128-offset), crop<256>(b<128>(n, offset)));
 	}
 
-	 ASSERT_EQ(b<256>(gen_string(b<4>("0101"), 31)),
-			   crop<256>(b<128>(gen_string(b<4>("0101"), 32), 4)));
+	ASSERT_EQ(b<256>(gen_string(b<4>("0101"), 31)),
+			  crop<256>(b<128>(gen_string(b<4>("0101"), 32), 4)));
 }
 
 TEST(Bitset, Flip)
@@ -265,16 +265,29 @@ TEST(Bitset, Concat)
 	);
 }
 
-TEST(Bitset, Extend)
+TEST(Bitset, Resize)
 {
+	// enlarge
 	REPEAT(10000,
 		size_t const r = rand();
 
-		ASSERT_EQ(b< 16>(b< 8>(r).to_ulong()), extend< 16>(b<8>(r)));
-		ASSERT_EQ(b< 32>(b<13>(r).to_ulong()), extend< 32>(b<13>(r)));
-		ASSERT_EQ(b<128>(b<42>(r).to_ulong()), extend<128>(b<42>(r)));
+		ASSERT_EQ(b< 16>(b< 8>(r).to_ulong()), resize< 16>(b< 8>(r)));
+		ASSERT_EQ(b< 32>(b<13>(r).to_ulong()), resize< 32>(b<13>(r)));
+		ASSERT_EQ(b<128>(b<42>(r).to_ulong()), resize<128>(b<42>(r)));
 
 		std::string s = random_bit_string(222);
-		ASSERT_EQ(b<333>(s), extend<333>(b<223>(s)));
+		ASSERT_EQ(b<333>(s), resize<333>(b<223>(s)));
+	);
+
+	// shrink
+	REPEAT(10000,
+		size_t const r = rand();
+
+		ASSERT_EQ(b< 8>(b< 16>(r).to_ulong()), resize< 8>(b< 16>(r)));
+		ASSERT_EQ(b<13>(b< 32>(r).to_ulong()), resize<13>(b< 32>(r)));
+		ASSERT_EQ(b<42>(b<128>(r).to_ullong()), resize<42>(b<128>(r)));
+
+		std::string s = random_bit_string(222);
+		ASSERT_EQ(b<223>(s), resize<223>(b<333>(s)));
 	);
 }

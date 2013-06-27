@@ -37,7 +37,7 @@ template<size_t Len, size_t N>
 typename std::enable_if<
 	(N<=BITTER_BITS_PER_BYTE*sizeof(unsigned long long)),
 	std::bitset<Len>>::type
-extend(bitset<N> const& t)
+resize(bitset<N> const& t)
 {
 	return std::bitset<Len>(t.to_ullong());
 }
@@ -46,9 +46,13 @@ template<size_t Len, size_t N>
 typename std::enable_if<
 	(N>BITTER_BITS_PER_BYTE*sizeof(uintmax_t)),
 	std::bitset<Len>>::type
-extend(bitset<N> const& t)
+resize(bitset<N> const& t)
 {
-	return std::bitset<Len>(t.to_string());
+	bitset<Len> r;
+	size_t c = detail::min<Len, N>::value - 1;
+	while (c--)
+		r[c] = t[c];
+	return r;
 }
 
 

@@ -21,5 +21,12 @@ struct sum<>
 	enum : size_t { value = 0 };
 };
 
+
+template<size_t N, size_t M>
+struct min
+{
+	enum : size_t { value = N<M ? N : M };
+};
+
 } // namespace detail
 } // namespace bit
