@@ -49,7 +49,7 @@ typename std::enable_if<
 resize(bitset<N> const& t)
 {
 	bitset<Len> r;
-	size_t c = detail::min<Len, N>::value - 1;
+	size_t c = detail::min<Len, N>::value;
 	while (c--)
 		r[c] = t[c];
 	return r;
@@ -95,9 +95,8 @@ template<size_t N, size_t ... Ns>
 bitset<detail::sum<N, Ns...>::value>
 concat(bitset<N> const& t, bitset<Ns> const& ... ts)
 {
-	typedef bitset<detail::sum<N, Ns...>::value> type;
-	return convert<type>(t) << detail::sum<Ns...>::value
-		| convert<type>(concat(ts...));
+	return resize<detail::sum<N, Ns...>::value>(t) << detail::sum<Ns...>::value
+		| resize<detail::sum<N, Ns...>::value>(concat(ts...));
 }
 
 } // namespace bit
