@@ -36,7 +36,7 @@ class CompoundTest : public ::testing::Test
 BITTER_COMPOUND(A, (_x,   7), (_y,  42), (_z,  67));
 BITTER_COMPOUND(B, (_x,   3), (_y,  23), (_z,   5));
 BITTER_COMPOUND(C, (_x,   7), (_y, 180), (_z,  62));
-BITTER_COMPOUND(D, (_x, 123), (_y, 113), (_z,  10));
+BITTER_COMPOUND(D, (_x, 180), (_y, 113), (_z, 256));
 
 
 typedef ::testing::Types<A, B, C, D> CompoundTypes;
@@ -46,6 +46,10 @@ TYPED_TEST_CASE(CompoundTest, CompoundTypes);
 TYPED_TEST(CompoundTest, Random)
 {
 	TypeParam a;
+
+	ASSERT_EQ(a.get_x().size() + a.get_y().size() + a.get_z().size(),
+		a.get().size());
+
 	REPEAT(10000,
 		TEST_COMPOUND(a, x);
 		TEST_COMPOUND(a, y);

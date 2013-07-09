@@ -12,7 +12,6 @@
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/variadic/to_seq.hpp>
-#include <boost/preprocessor/arithmetic/add.hpp>
 #include <boost/preprocessor/seq/fold_left.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
 #include <boost/preprocessor/seq/first_n.hpp>
@@ -25,7 +24,7 @@
 #define BITTER_COMPOUND_CAST(z, n, data) static_cast<data>(n)
 
 #define BITTER_COMPOUND_ADD(s, state, x) \
-	BOOST_PP_ADD(state, BOOST_PP_TUPLE_ELEM(1, x))
+	state + BOOST_PP_TUPLE_ELEM(1, x)
 
 #define BITTER_COMPOUND_N(seq) BOOST_PP_SEQ_FOLD_LEFT(BITTER_COMPOUND_ADD, 0, seq)
 
@@ -56,15 +55,15 @@
 	}
 
 #define BITTER_COMPOUND_SETTER(data, i, elem) \
-	void BOOST_PP_CAT(set, BOOST_PP_TUPLE_ELEM(0, elem)) \
-		(std::bitset<BOOST_PP_TUPLE_ELEM(1, elem)> const& v) \
+	void BOOST_PP_CAT(set, BITTER_COMPOUND_NAME(elem)) \
+		(std::bitset<BITTER_COMPOUND_SIZE(elem)> const& v) \
 	{ \
 		/* generate static mask for this part of the bitset */ \
 		static const auto m = BITTER_COMPOUND_GEN_MASK( \
 			i, BITTER_COMPOUND_SIZE(elem), BITTER_COMPOUND_SEQ(data)); \
 		\
 		/* actually set the corresponding bits */ \
-		BOOST_PP_TUPLE_ELEM(0, data) = \
+		BITTER_COMPOUND_MEMBER(data) = \
 			/* mask out previous bit pattern */ \
 			bit::mask(BITTER_COMPOUND_MEMBER(data), m) | \
 			/* substitute new bits */ \
@@ -73,7 +72,9 @@
 	}
 
 #define BITTER_COMPOUND_ACCESSORS(r, data, i, elem) \
-	static_assert(BOOST_PP_TUPLE_ELEM(1, elem), "no zero sized fields"); \
+	static_assert(BITTER_COMPOUND_SIZE(elem), "no zero sized fields"); \
+	static_assert(BITTER_COMPOUND_SIZE(elem) <= 256, \
+				  "bitset sizes must be <= 256"); \
 	BITTER_COMPOUND_GETTER(data, i, elem) \
 	BITTER_COMPOUND_SETTER(data, i, elem)
 

@@ -262,11 +262,18 @@ TEST(Bitset, Concat)
 		auto const r = random<size_t>(64);
 		ASSERT_EQ(b<16>(r), concat(b<3>(r<<13), b<8>(r<<5), b<5>(r)));
 		ASSERT_EQ(b<33>(r), concat(b<11>(r<<22), concat(b<11>(r<<11), b<11>(r))));
+	);
 
-		std::string s;
-		for (size_t ii = 0; ii<3; ++ii)
-			s += b<64>(r).to_string();
-		ASSERT_EQ(b<3*64>(s), concat(b<64>(r), b<64>(r), b<64>(r)));
+	REPEAT(1000,
+		size_t const N = 500;
+		typedef b<N> type;
+		std::vector<std::string> s = {
+			random_bit_string(N),
+			random_bit_string(N),
+			random_bit_string(N)
+		};
+		std::string complete = s.at(0)+s.at(1)+s.at(2);
+		ASSERT_EQ(complete, concat(type(s[0]), type(s[1]), type(s[2])).to_string());
 	);
 }
 
