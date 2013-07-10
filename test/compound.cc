@@ -14,20 +14,27 @@ struct bitset_size< std::bitset<N> > :
 	public std::integral_constant<size_t, N>
 {};
 
-#define TEST_COMPOUND(instance, name) \
-	/* first get size of instance */ \
-	typedef typename std::decay< \
-			decltype( instance. get_ ## name () ) \
-		>::type name ## _t; \
-	static size_t const name ## _N = bitset_size<name ## _t>::value; \
-	\
-	/* now do random assignment and verify */ \
-	std::bitset<name ## _N> const name = random<name ## _N>(); \
-	instance. set_ ## name (name); \
-	ASSERT_EQ(name, instance. get_ ## name ()); \
-	ASSERT_EQ(name ## _N, instance. get_ ## name ().size());
+template<size_t N>
+void assert_eq(std::bitset<N> const& a, std::bitset<N> const& b)
+{
+	ASSERT_EQ(a, b);
+}
 
-using namespace bit;
+template<typename T, typename Set>
+Set verify(T& c, Set (T::*getter) () const, void (T::*setter) (Set const&))
+{
+	// make sure all bits are zero
+	assert_eq({0}, (c.*getter)());
+
+	// fill with random bit permutation
+	auto const rand = random<bitset_size<Set>::value>();
+	(c.*setter)(rand);
+
+	// and check
+	assert_eq(rand, (c.*getter)());
+
+	return rand;
+}
 
 template<typename T>
 class CompoundTest : public ::testing::Test
@@ -43,18 +50,36 @@ typedef ::testing::Types<A, B, C, D> CompoundTypes;
 
 TYPED_TEST_CASE(CompoundTest, CompoundTypes);
 
-TYPED_TEST(CompoundTest, Random)
+TYPED_TEST(CompoundTest, Size)
 {
 	TypeParam a;
-
 	ASSERT_EQ(a.get_x().size() + a.get_y().size() + a.get_z().size(),
 		a.get().size());
+}
+
+TYPED_TEST(CompoundTest, Assignment)
+{
+	typedef TypeParam type;
 
 	REPEAT(10000,
-		TEST_COMPOUND(a, x);
-		TEST_COMPOUND(a, y);
-		TEST_COMPOUND(a, z);
+		type a;
+		auto const x = verify(a, &type::get_x, &type::set_x);
+		auto const y = verify(a, &type::get_y, &type::set_y);
+		auto const z = verify(a, &type::get_z, &type::set_z);
 
-		ASSERT_EQ(concat(z, y, x), a.get());
+		ASSERT_EQ(bit::concat(z, y, x), a.get());
+	);
+}
+
+TYPED_TEST(CompoundTest, GetterSetter)
+{
+	typedef typename std::decay<decltype(TypeParam().get())>::type type;
+	static size_t const N = bitset_size<type>::value;
+
+	REPEAT(10000,
+		type const rand = random<N>();
+		TypeParam a;
+		a.set(rand);
+		ASSERT_EQ(rand, a.get());
 	);
 }

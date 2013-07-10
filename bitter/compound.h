@@ -81,20 +81,21 @@
 #define BITTER_COMPOUND(name, ...) \
 	class name \
 	{ \
-	private: \
-		typedef BITTER_COMPOUND_TYPE(BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__)) __t; \
-		__t __value; \
+	protected: \
+		typedef BITTER_COMPOUND_TYPE(BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__)) type; \
+		type value; \
 	public: \
-		constexpr name(__t const& v) : \
-			__value(v) {} \
+		constexpr name(type const& v) : \
+			value(v) {} \
 		constexpr name(name const& v) = default; \
-		constexpr name() noexcept : __value() {}; \
+		constexpr name() noexcept : value() {}; \
 		name& operator= (name const& v) = default; \
 		\
 		/* setter and getter functions */ \
 		BOOST_PP_SEQ_FOR_EACH_I(BITTER_COMPOUND_ACCESSORS, \
-			(__value, BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__)), \
+			(value, BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__)), \
 			BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__)) \
 		\
-		__t const& get() const { return __value; } \
+		type const& get() const { return value; } \
+		void set(type const& v) { value = v; } \
 	}
